@@ -3,117 +3,122 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>RO 水添加量計算機</title>
+    <title>CMC 添加量計算機</title>
     <style>
-        /* 統一字型設定：英文 Calibri, 中文 微軟正黑體 */
-        body { 
-            font-family: Calibri, "Microsoft JhengHei", "微軟正黑體", -apple-system, sans-serif; 
-            background-color: #f0f2f5; 
-            display: flex; 
-            flex-direction: column; 
-            align-items: center; 
-            min-height: 100vh; 
-            margin: 0; 
-            padding: 20px; 
-            box-sizing: border-box; 
-        }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: #f0f2f5; display: flex; flex-direction: column; align-items: center; min-height: 100vh; margin: 0; padding: 20px; box-sizing: border-box; }
         .card { background: white; width: 100%; max-width: 400px; border-radius: 15px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); padding: 25px; margin-bottom: 20px; }
-        h2 { text-align: center; color: #1a73e8; margin-top: 0; margin-bottom: 25px; letter-spacing: 1px; font-weight: bold; }
+        h2 { text-align: center; color: #1a73e8; margin-top: 0; margin-bottom: 25px; letter-spacing: 1px; }
         .input-group { margin-bottom: 18px; }
         label { display: block; margin-bottom: 8px; font-weight: 600; color: #444; font-size: 15px; }
-        input { width: 100%; padding: 15px; border: 2px solid #ddd; border-radius: 10px; font-size: 18px; box-sizing: border-box; transition: all 0.3s; font-family: Calibri, "Microsoft JhengHei", sans-serif; }
+        input { width: 100%; padding: 15px; border: 2px solid #ddd; border-radius: 10px; font-size: 18px; box-sizing: border-box; transition: all 0.3s; }
         input:focus { border-color: #1a73e8; outline: none; background-color: #fcfcfc; }
+        .fixed-val { background-color: #f8f9fa; color: #6c757d; border-style: dashed; font-weight: bold; }
         .btn-group { display: flex; gap: 10px; margin-top: 20px; }
-        .btn-calc { flex: 2; padding: 15px; background-color: #1a73e8; color: white; border: none; border-radius: 10px; font-size: 18px; font-weight: bold; cursor: pointer; font-family: "Microsoft JhengHei", sans-serif; }
-        .btn-reset { flex: 1; padding: 15px; background-color: #6c757d; color: white; border: none; border-radius: 10px; font-size: 18px; cursor: pointer; font-family: "Microsoft JhengHei", sans-serif; }
+        .btn-calc { flex: 2; padding: 15px; background-color: #1a73e8; color: white; border: none; border-radius: 10px; font-size: 18px; font-weight: bold; cursor: pointer; }
+        .btn-reset { flex: 1; padding: 15px; background-color: #6c757d; color: white; border: none; border-radius: 10px; font-size: 18px; cursor: pointer; }
         button:active { transform: scale(0.97); opacity: 0.9; }
-        .result-box { margin-top: 25px; padding: 20px; background-color: #e8f0fe; border-radius: 10px; display: none; text-align: center; animation: fadeIn 0.4s; }
+        .result-box { margin-top: 25px; padding: 20px; border-radius: 10px; display: none; text-align: center; animation: fadeIn 0.4s; }
+        .res-blue { background-color: #e8f0fe; }
+        .res-green { background-color: #e6f4ea; }
         .result-label { color: #1967d2; font-size: 15px; margin-bottom: 5px; font-weight: 500; }
-        .result-value { font-size: 34px; font-weight: bold; color: #d93025; font-family: Calibri, sans-serif; }
-        
-        /* 作者資訊區塊 */
-        .footer { text-align: center; color: #888; font-size: 12px; line-height: 1.6; margin-top: auto; padding-top: 10px; font-family: Calibri, "Microsoft JhengHei", sans-serif; }
-        
+        .result-value { font-size: 34px; font-weight: bold; color: #d93025; }
+        .footer { text-align: center; color: #888; font-size: 12px; line-height: 1.6; margin-top: auto; padding-top: 10px; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
 
 <div class="card">
-    <h2>RO 水添加量計算機</h2>
+    <h2>CMC 計算機</h2>
     
     <div class="input-group">
-        <label>原始固含量 (%)</label>
-        <input type="number" id="origSolid" placeholder="請輸入原始百分比" step="0.1" onfocus="this.select()">
+        <label>CMC 固含量 (%)</label>
+        <input type="number" id="solidContent" placeholder="請輸入固含量" step="0.1" onfocus="this.select()">
     </div>
 
     <div class="input-group">
-        <label>原始重量 (kg)</label>
-        <input type="number" id="origWeight" placeholder="請輸入原始重量" step="0.1" onfocus="this.select()">
+        <label>RO 水重量 (固定 kg)</label>
+        <input type="text" value="10 kg" disabled class="fixed-val">
     </div>
 
     <div class="input-group">
-        <label>目標固含量 (%)</label>
-        <input type="number" id="targetSolid" placeholder="請輸入目標百分比" step="0.1" onfocus="this.select()">
+        <label>添加 CMC 粉材重量 (kg)</label>
+        <input type="number" id="manualPowder" placeholder="留空則自動計算建議值" step="0.0001" onfocus="this.select()">
+    </div>
+
+    <div class="input-group">
+        <label>目標比例 (固定 %)</label>
+        <input type="text" value="2.3%" disabled class="fixed-val">
     </div>
 
     <div class="btn-group">
         <button class="btn-reset" onclick="resetForm()">清空</button>
-        <button class="btn-calc" onclick="calculate()">計算添加量</button>
+        <button class="btn-calc" onclick="calculate()">執行計算</button>
     </div>
 
     <div class="result-box" id="resultArea">
-        <div class="result-label">建議加入 RO 水重量</div>
-        <div class="result-value"><span id="output">0</span> <small style="font-size: 16px; color: #444;">kg</small></div>
+        <div id="resTitle" class="result-label">結果</div>
+        <div class="result-value"><span id="output">0</span> <span id="unit">kg</span></div>
     </div>
 </div>
 
 <div class="footer">
     作者：SJ<br>
-    版本：v1.2.1<br>
+    版本：v1.2.0 (固定水量版)<br>
     最後更新日期：2026-01-12
 </div>
 
 <script>
     function calculate() {
-        const c1Input = document.getElementById('origSolid');
-        const w1Input = document.getElementById('origWeight');
-        const ctInput = document.getElementById('targetSolid');
-        
-        if (!c1Input.value || !w1Input.value || !ctInput.value) {
-            alert("請填寫完整的數值");
+        const sInput = document.getElementById('solidContent');
+        const mInput = document.getElementById('manualPowder');
+        const resArea = document.getElementById('resultArea');
+        const output = document.getElementById('output');
+        const unit = document.getElementById('unit');
+        const resTitle = document.getElementById('resTitle');
+
+        if (!sInput.value) {
+            alert("請輸入 CMC 固含量 (%)");
             return;
         }
 
-        const C1 = parseFloat(c1Input.value);
-        const W1 = parseFloat(w1Input.value);
-        const Ctarget = parseFloat(ctInput.value);
+        const C = parseFloat(sInput.value) / 100;
+        const W_water = 10; // 固定為 10kg
+        const P_target = 0.023; // 固定為 2.3%
 
-        if (Ctarget >= C1) {
-            alert("錯誤：目標固含量必須低於原始固含量（稀釋邏輯）。");
-            return;
+        // 判斷：如果有輸入粉量則算最終濃度；若留空則算建議粉量
+        if (mInput.value && mInput.value > 0) {
+            // 反算濃度: (粉量 * 固含量) / (水 + 粉量)
+            const X_actual = parseFloat(mInput.value);
+            const finalP = (X_actual * C) / (W_water + X_actual);
+            
+            resTitle.innerText = "預期最終濃度";
+            output.innerText = (finalP * 100).toFixed(3);
+            unit.innerText = "%";
+            unit.style.fontSize = "20px";
+            resArea.className = "result-box res-green";
+        } else {
+            // 正算建議粉量
+            if (C <= P_target) {
+                alert("錯誤：固含量必須大於 2.3%");
+                return;
+            }
+            const X = (P_target * W_water) / (C - P_target);
+            
+            resTitle.innerText = "建議添加粉材重量";
+            output.innerText = X.toFixed(4);
+            unit.innerText = "kg";
+            unit.style.fontSize = "16px";
+            resArea.className = "result-box res-blue";
         }
 
-        if (Ctarget <= 0) {
-            alert("錯誤：目標固含量不能為 0。");
-            return;
-        }
-
-        // 公式: W_water = (W1 * C1 / Ctarget) - W1
-        const waterNeeded = (W1 * C1 / Ctarget) - W1;
-        
-        document.getElementById('output').innerText = waterNeeded.toFixed(2);
-        document.getElementById('resultArea').style.display = 'block';
-        
-        setTimeout(() => {
-            document.getElementById('resultArea').scrollIntoView({ behavior: 'smooth' });
-        }, 100);
+        resArea.style.display = 'block';
+        setTimeout(() => { resArea.scrollIntoView({ behavior: 'smooth' }); }, 100);
     }
 
     function resetForm() {
-        document.getElementById('origSolid').value = '';
-        document.getElementById('origWeight').value = '';
-        document.getElementById('targetSolid').value = '';
+        document.getElementById('solidContent').value = '';
+        document.getElementById('manualPowder').value = '';
         document.getElementById('resultArea').style.display = 'none';
     }
 </script>
