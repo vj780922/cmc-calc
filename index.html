@@ -79,7 +79,7 @@
 
 <div class="footer">
     作者：SJ<br>
-    版本：v1.5.0 <br>
+    版本：v1.5.1<br>
     最後更新日期：2026-03-16
 </div>
 
@@ -97,18 +97,14 @@
         const v3 = parseFloat(document.getElementById('sc3').value);
         const tInput = document.getElementById('totalWeight');
         
-        const resArea = document.getElementById('resultArea');
-        const avgInfo = document.getElementById('avgInfo');
-        const outPowder = document.getElementById('outputPowder');
-        const outWater = document.getElementById('outputWater');
-
-        if (isNaN(v1) || isNaN(v2) || isNaN(v3) || !tInput.value) {
-            alert("請完整輸入三個固含量數值與總重量");
+        let values = [v1, v2, v3].filter(v => !isNaN(v));
+        
+        if (values.length === 0 || !tInput.value) {
+            alert("請至少輸入一個固含量數值與總重量");
             return;
         }
 
-        // 計算平均固含量
-        const avgC_percent = (v1 + v2 + v3) / 3;
+        const avgC_percent = values.reduce((a, b) => a + b, 0) / values.length;
         const C = avgC_percent / 100;
         const totalWeight = parseFloat(tInput.value); 
         const P_target = 0.023; 
@@ -121,13 +117,13 @@
         const X = (P_target * totalWeight) / C;
         const W = totalWeight - X;
         
-        avgInfo.innerText = "平均固含量：" + avgC_percent.toFixed(3) + " %";
-        outPowder.innerText = X.toFixed(4);
-        outWater.innerText = W.toFixed(4);
-        resArea.style.display = 'block';
+        document.getElementById('avgInfo').innerText = "平均固含量 (" + values.length + "筆)：" + avgC_percent.toFixed(3) + " %";
+        document.getElementById('outputPowder').innerText = X.toFixed(4);
+        document.getElementById('outputWater').innerText = W.toFixed(4);
+        document.getElementById('resultArea').style.display = 'block';
         
         setTimeout(() => {
-            resArea.scrollIntoView({ behavior: 'smooth' });
+            document.getElementById('resultArea').scrollIntoView({ behavior: 'smooth' });
         }, 100);
     }
 
