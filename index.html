@@ -22,6 +22,7 @@
         .result-item:last-child { margin-bottom: 0; }
         .result-label { color: #1967d2; font-size: 15px; margin-bottom: 5px; font-weight: 500; }
         .result-value { font-size: 32px; font-weight: bold; color: #d93025; }
+        .visit-counter { margin-top: 10px; font-size: 13px; color: #666; font-weight: bold; }
         .footer { text-align: center; color: #888; font-size: 12px; line-height: 1.6; margin-top: auto; padding-top: 10px; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
@@ -64,13 +65,29 @@
     </div>
 </div>
 
+<div class="visit-counter">
+    網頁開啟次數：<span id="visitCount">0</span> 次
+</div>
+
 <div class="footer">
     作者：SJ<br>
-    版本：v1.4.1<br>
+    版本：v1.4.0 (新增計數功能)<br>
     最後更新日期：2026-03-16
 </div>
 
 <script>
+    // 頁面載入時執行拜訪次數邏輯
+    window.onload = function() {
+        let count = localStorage.getItem('visitCount');
+        if (count === null) {
+            count = 1;
+        } else {
+            count = parseInt(count) + 1;
+        }
+        localStorage.setItem('visitCount', count);
+        document.getElementById('visitCount').innerText = count;
+    };
+
     function calculate() {
         const sInput = document.getElementById('solidContent');
         const tInput = document.getElementById('totalWeight');
@@ -82,36 +99,3 @@
             alert("請輸入 CMC 粉材固含量與總重量");
             return;
         }
-
-        const C = parseFloat(sInput.value) / 100;
-        const totalWeight = parseFloat(tInput.value); 
-        const P_target = 0.023; 
-
-        if (C <= P_target) {
-            alert("錯誤：固含量必須大於 2.3%，否則無法達成此濃度。");
-            return;
-        }
-
-        // 建議粉材重量 X = (目標比例 * 總重量) / 固含量
-        const X = (P_target * totalWeight) / C;
-        // RO水添加重量 = 總重量 - 粉材重量
-        const W = totalWeight - X;
-        
-        outPowder.innerText = X.toFixed(4);
-        outWater.innerText = W.toFixed(4);
-        resArea.style.display = 'block';
-        
-        setTimeout(() => {
-            resArea.scrollIntoView({ behavior: 'smooth' });
-        }, 100);
-    }
-
-    function resetForm() {
-        document.getElementById('solidContent').value = '';
-        document.getElementById('totalWeight').value = '10'; // 清除後恢復預設值 10
-        document.getElementById('resultArea').style.display = 'none';
-    }
-</script>
-
-</body>
-</html>
