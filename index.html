@@ -66,7 +66,7 @@
             display: block;
         }
 
-        input[type="number"] {
+        input[type="number"], input[type="text"] {
             width: 100%;
             padding: 12px;
             border: 1.5px solid #e2e8f0;
@@ -77,20 +77,13 @@
             transition: all 0.3s;
         }
 
-        input[type="number"]:focus {
+        input:focus {
             border-color: #3182ce;
             background-color: #fcfcfc;
         }
 
         .single-input-group {
             margin-bottom: 25px;
-        }
-
-        .fixed-val {
-            background-color: #f8f9fa;
-            color: #a0aec0;
-            border: 1.5px dashed #cbd5e0;
-            font-weight: bold;
         }
 
         .btn-group {
@@ -211,7 +204,7 @@
 
         <div class="single-input-group">
             <span class="section-label">BD_C23 目標比例 (%)</span>
-            <input type="text" value="2.3" disabled class="fixed-val">
+            <input type="number" id="targetRatio" value="2.3" step="0.1" onfocus="this.select()">
         </div>
 
         <div class="btn-group">
@@ -236,7 +229,7 @@
     </div>
 
     <div class="footer-info">
-        <div>作者：SJ | 版本：v1.6 | 最後更新日期：2026/05/18</div>
+        <div>作者：SJ | 版本：v1.6.1 | 最後更新日期：2026/05/18</div>
         <div>拜訪次數：<span class="visit-badge" id="visitCount">0</span></div>
     </div>
 </div>
@@ -254,29 +247,27 @@
         const v2 = parseFloat(document.getElementById('sc2').value);
         const v3 = parseFloat(document.getElementById('sc3').value);
         const tWeight = parseFloat(document.getElementById('totalWeight').value);
+        const tRatio = parseFloat(document.getElementById('targetRatio').value);
         
         let values = [v1, v2, v3].filter(v => !isNaN(v));
         
-        if (values.length === 0 || isNaN(tWeight)) {
-            alert("請至少輸入一筆固含量與總重量");
+        if (values.length === 0 || isNaN(tWeight) || isNaN(tRatio)) {
+            alert("請檢查固含量、總重量與目標比例是否已輸入");
             return;
         }
 
         const avgSolid = values.reduce((a, b) => a + b, 0) / values.length;
         const C = avgSolid / 100;
-        const P_target = 0.023; 
+        const P_target = tRatio / 100; 
 
         if (C <= P_target) {
-            alert("錯誤：平均固含量必須大於 2.3%");
+            alert("錯誤：平均固含量必須大於目標比例 (" + tRatio + "%)");
             return;
         }
 
-        // 計算粉量 X = (目標比例 * 總重) / 固含量
         const powder = (P_target * tWeight) / C;
-        // 計算水量 W = 總重 - 粉量
         const water = tWeight - powder;
 
-        // 顯示結果
         document.getElementById('avgSolid').innerText = avgSolid.toFixed(3) + " % (" + values.length + "筆)";
         document.getElementById('outputPowder').innerText = powder.toFixed(4) + " kg";
         document.getElementById('outputWater').innerText = water.toFixed(4) + " kg";
@@ -289,6 +280,7 @@
         document.getElementById('sc2').value = '';
         document.getElementById('sc3').value = '';
         document.getElementById('totalWeight').value = '10';
+        document.getElementById('targetRatio').value = '2.3';
         document.getElementById('resultBox').style.display = 'none';
     }
 </script>
