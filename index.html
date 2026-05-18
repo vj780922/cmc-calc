@@ -2,350 +2,140 @@
 <html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>漿料配比與含水物計算機 - SJ</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>BD_C23配比計算機</title>
     <style>
-        /* 字型設定：英文 Calibri, 中文 微軟正黑體 */
-        body {
-            font-family: "Calibri", "Microsoft JhengHei", sans-serif;
-            background-color: #f4f7f9;
-            color: #2d3748;
-            margin: 0;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            padding: 20px;
-        }
-
-        .container {
-            width: 100%;
-            max-width: 550px;
-        }
-
-        .card {
-            background: #ffffff;
-            border-radius: 16px;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
-            padding: 35px;
-            margin-bottom: 25px;
-        }
-
-        h2 {
-            text-align: center;
-            margin-top: 0;
-            color: #1a365d;
-            font-size: 24px;
-            margin-bottom: 30px;
-        }
-
-        .section-label {
-            font-weight: bold;
-            margin-bottom: 12px;
-            display: block;
-            color: #3182ce;
-            border-left: 4px solid #3182ce;
-            padding-left: 10px;
-        }
-
-        .input-row {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 12px;
-            margin-bottom: 25px;
-        }
-
-        .input-group label {
-            font-size: 12px;
-            color: #718096;
-            margin-bottom: 5px;
-            display: block;
-        }
-
-        input[type="number"], select {
-            width: 100%;
-            padding: 12px;
-            border: 1.5px solid #e2e8f0;
-            border-radius: 8px;
-            font-size: 15px;
-            box-sizing: border-box;
-            outline: none;
-            font-family: "Calibri", "Microsoft JhengHei";
-        }
-
-        input[type="number"]:focus, select:focus {
-            border-color: #3182ce;
-        }
-
-        button {
-            width: 100%;
-            padding: 15px;
-            background-color: #3182ce;
-            color: white;
-            border: none;
-            border-radius: 10px;
-            font-size: 18px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: background 0.3s;
-        }
-
-        button:hover {
-            background-color: #2c5282;
-        }
-
-        .result-area {
-            margin-top: 30px;
-            padding: 20px;
-            background-color: #ebf8ff;
-            border-radius: 12px;
-            border: 1px solid #bee3f8;
-            display: none;
-        }
-
-        .result-line {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 10px;
-            font-size: 15px;
-        }
-
-        .final-val {
-            font-size: 18px;
-            font-weight: bold;
-            color: #2b6cb0;
-            border-top: 2px dashed #90cdf4;
-            padding-top: 15px;
-            margin-top: 15px;
-            flex-direction: column;
-            align-items: flex-start;
-        }
-
-        .final-val div {
-            width: 100%;
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 5px;
-        }
-
-        .highlight-text {
-            color: #e53e3e;
-            font-size: 22px;
-        }
-
-        .footer-info {
-            text-align: center;
-            font-size: 13px;
-            color: #718096;
-            line-height: 2;
-        }
-
-        .visit-badge {
-            background: #e2e8f0;
-            padding: 2px 10px;
-            border-radius: 12px;
-            font-weight: bold;
-            color: #4a5568;
-            margin-left: 5px;
-        }
+        body { font-family: "Microsoft JhengHei", Calibri, sans-serif; background-color: #f0f2f5; display: flex; flex-direction: column; align-items: center; min-height: 100vh; margin: 0; padding: 20px; box-sizing: border-box; }
+        .card { background: white; width: 100%; max-width: 400px; border-radius: 15px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); padding: 25px; margin-bottom: 20px; }
+        h2 { text-align: center; color: #1a73e8; margin-top: 0; margin-bottom: 20px; letter-spacing: 1px; }
+        .input-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 8px; font-weight: 600; color: #444; font-size: 15px; }
+        .multi-input { display: flex; gap: 8px; margin-bottom: 5px; }
+        .multi-input input { flex: 1; padding: 12px; }
+        input { width: 100%; padding: 15px; border: 2px solid #ddd; border-radius: 10px; font-size: 18px; box-sizing: border-box; transition: all 0.3s; }
+        input:focus { border-color: #1a73e8; outline: none; background-color: #fcfcfc; }
+        .fixed-val { background-color: #f8f9fa; color: #6c757d; border-style: dashed; font-weight: bold; }
+        .avg-display { font-size: 13px; color: #1a73e8; font-weight: bold; margin-bottom: 10px; }
+        .btn-group { display: flex; gap: 10px; margin-top: 20px; }
+        .btn-calc { flex: 2; padding: 15px; background-color: #1a73e8; color: white; border: none; border-radius: 10px; font-size: 18px; font-weight: bold; cursor: pointer; order: 1; }
+        .btn-reset { flex: 1; padding: 15px; background-color: #6c757d; color: white; border: none; border-radius: 10px; font-size: 18px; cursor: pointer; order: 2; }
+        button:active { transform: scale(0.97); opacity: 0.9; }
+        .result-box { margin-top: 25px; padding: 20px; background-color: #e8f0fe; border-radius: 10px; display: none; text-align: center; animation: fadeIn 0.4s; }
+        .result-item { margin-bottom: 15px; }
+        .result-item:last-child { margin-bottom: 0; }
+        .result-label { color: #1967d2; font-size: 14px; margin-bottom: 5px; font-weight: 500; }
+        .result-value { font-size: 32px; font-weight: bold; color: #d93025; }
+        .visit-counter { margin-top: 10px; font-size: 13px; color: #666; font-weight: bold; }
+        .footer { text-align: center; color: #888; font-size: 12px; line-height: 1.6; margin-top: auto; padding-top: 10px; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <div class="card">
-        <h2>漿料配比與含水物計算機</h2>
-
-        <!-- 期望目標設定 -->
-        <span class="section-label">期望目標設定</span>
-        <div class="input-row" style="grid-template-columns: repeat(2, 1fr);">
-            <div class="input-group">
-                <label>目標總重量 (kg)</label>
-                <input type="number" id="targetTotalWeight" step="0.1" value="10" placeholder="10.0">
-            </div>
-            <div class="input-group">
-                <label>目標固含量 (%)</label>
-                <input type="number" id="targetPercent" step="0.01" value="59.33" placeholder="59.33">
-            </div>
+<div class="card">
+    <h2>BD_C23配比計算機</h2>
+    
+    <div class="input-group">
+        <label>CMC 粉材固含量量測 (%)</label>
+        <div class="multi-input">
+            <input type="number" id="sc1" placeholder="值 1" step="0.01" onfocus="this.select()">
+            <input type="number" id="sc2" placeholder="值 2" step="0.01" onfocus="this.select()">
+            <input type="number" id="sc3" placeholder="值 3" step="0.01" onfocus="this.select()">
         </div>
-
-        <!-- 原料添加量輸入 (第一組) -->
-        <span class="section-label">原料添加量 (kg) - 固體類</span>
-        <div class="input-row">
-            <div class="input-group">
-                <label>N58-30K (99.67%)</label>
-                <input type="number" id="w_n58" step="0.0001" placeholder="0.0000" value="6.2800">
-            </div>
-            <div class="input-group">
-                <label>Super P (99.29%)</label>
-                <input type="number" id="w_sp" step="0.0001" placeholder="0.0000" value="0.1850">
-            </div>
-            <div class="input-group">
-                <label>SBR (45.65%)</label>
-                <input type="number" id="w_sbr" step="0.0001" placeholder="0.0000" value="0.1470">
-            </div>
-        </div>
-
-        <!-- 原料添加量輸入 (第二組) -->
-        <span class="section-label">原料添加量 (kg) - 液體/分散類</span>
-        <div class="input-row">
-            <div class="input-group">
-                <label>BD_C23 (2.37%)</label>
-                <input type="number" id="w_bd" step="0.0001" placeholder="0.0000" value="2.7800">
-            </div>
-            <div class="input-group">
-                <label>SWCNT (0.85%)</label>
-                <input type="number" id="w_swcnt" step="0.0001" placeholder="0.0000" value="0.5500">
-            </div>
-            <div class="input-group">
-                <label>RO水 (0.00%)</label>
-                <input type="number" id="w_ro" step="0.0001" placeholder="0.0000" value="1.1500">
-            </div>
-        </div>
-
-        <!-- 調節原料選擇 -->
-        <span class="section-label">調節參數</span>
-        <div class="input-group" style="margin-bottom: 25px;">
-            <label>欲用來補足/調節的原料</label>
-            <select id="adjustMaterial">
-                <option value="RO水">RO水 (0.00%)</option>
-                <option value="N58-30K">N58-30K (99.67%)</option>
-                <option value="Super P">Super P (99.29%)</option>
-                <option value="BD_C23">BD_C23 (2.37%)</option>
-                <option value="SWCNT">SWCNT (0.85%)</option>
-                <option value="SBR">SBR (45.65%)</option>
-            </select>
-        </div>
-
-        <button onclick="calculate()">執行計算</button>
-
-        <!-- 結果顯示區域 -->
-        <div id="resultBox" class="result-area">
-            <div class="result-line">
-                <span>目前實際總重量：</span>
-                <span id="resTotalWeight">-</span>
-            </div>
-            <div class="result-line">
-                <span>目前實際總固重：</span>
-                <span id="resTotalSolid">-</span>
-            </div>
-            <div class="result-line">
-                <span>目前總含水量 (%)：</span>
-                <span id="resWaterPercent">-</span>
-            </div>
-            <div class="result-line">
-                <span>目前總固含量 (%)：</span>
-                <span id="resSolidPercent">-</span>
-            </div>
-            
-            <div class="result-line final-val">
-                <div>
-                    <span>需補足 <strong id="resAdjustName" style="color:#1a365d;">-</strong> 重量：</span>
-                    <span id="resNeededWeight" class="highlight-text">-</span>
-                </div>
-                <div style="font-size: 12px; color: #718096; font-weight: normal; margin-top: 5px;">
-                    <span>補足後預計最終固含量：</span>
-                    <span id="resFinalSolidPercent">-</span>
-                </div>
-            </div>
-        </div>
+        <div id="avgInfo" class="avg-display">平均固含量：-- %</div>
     </div>
 
-    <!-- 頁尾資訊與次數統計 -->
-    <div class="footer-info">
-        <div>作者：SJ | 版本：v2.0 | 最後更新日期：2026/05/18</div>
-        <div>拜訪次數：<span class="visit-badge" id="visitCount">0</span></div>
+    <div class="input-group">
+        <label>總重量 (Kg)</label>
+        <input type="number" id="totalWeight" value="10" step="0.1" onfocus="this.select()">
+    </div>
+
+    <div class="input-group">
+        <label>BD_C23 比例</label>
+        <input type="text" value="2.3" disabled class="fixed-val">
+    </div>
+
+    <div class="btn-group">
+        <button class="btn-calc" onclick="calculate()">計算添加量</button>
+        <button class="btn-reset" onclick="resetForm()">清除</button>
+    </div>
+
+    <div class="result-box" id="resultArea">
+        <div class="result-item">
+            <div class="result-label">添加CMC粉材重量</div>
+            <div class="result-value"><span id="outputPowder">0</span> <small style="font-size: 16px; color: #444;">kg</small></div>
+        </div>
+        <hr style="border: 0; border-top: 1px solid #d0e1f9; margin: 15px 0;">
+        <div class="result-item">
+            <div class="result-label">添加RO水重量</div>
+            <div class="result-value"><span id="outputWater">0</span> <small style="font-size: 16px; color: #444;">kg</small></div>
+        </div>
     </div>
 </div>
 
-<script>
-    // 原材料固含量定義資料庫
-    const db = {
-        "N58-30K": 99.67,
-        "Super P": 99.29,
-        "BD_C23": 2.37,
-        "SWCNT": 0.85,
-        "RO水": 0.00,
-        "SBR": 45.65
-    };
+<div class="visit-counter">
+    拜訪次數：<span id="visitCount">0</span> 次
+</div>
 
-    // 網頁載入時執行：紀錄並讀取拜訪次數
+<div class="footer">
+    作者：SJ<br>
+    版本：v1.5.1<br>
+    最後更新日期：2026-03-16
+</div>
+
+<script>
     window.onload = function() {
-        let count = localStorage.getItem('sj_slurry_calc_visits') || 0;
-        count = parseInt(count) + 1;
-        localStorage.setItem('sj_slurry_calc_visits', count);
+        let count = localStorage.getItem('visitCount');
+        count = count === null ? 1 : parseInt(count) + 1;
+        localStorage.setItem('visitCount', count);
         document.getElementById('visitCount').innerText = count;
     };
 
-    // 四捨五入精確計算函數
-    function roundTo(num, decimals) {
-        return Math.round((num + Number.EPSILON) * Math.pow(10, decimals)) / Math.pow(10, decimals);
+    function calculate() {
+        const v1 = parseFloat(document.getElementById('sc1').value);
+        const v2 = parseFloat(document.getElementById('sc2').value);
+        const v3 = parseFloat(document.getElementById('sc3').value);
+        const tInput = document.getElementById('totalWeight');
+        
+        let values = [v1, v2, v3].filter(v => !isNaN(v));
+        
+        if (values.length === 0 || !tInput.value) {
+            alert("請至少輸入一個固含量數值與總重量");
+            return;
+        }
+
+        const avgC_percent = values.reduce((a, b) => a + b, 0) / values.length;
+        const C = avgC_percent / 100;
+        const totalWeight = parseFloat(tInput.value); 
+        const P_target = 0.023; 
+
+        if (C <= P_target) {
+            alert("錯誤：平均固含量必須大於 2.3%");
+            return;
+        }
+
+        const X = (P_target * totalWeight) / C;
+        const W = totalWeight - X;
+        
+        document.getElementById('avgInfo').innerText = "平均固含量 (" + values.length + "筆)：" + avgC_percent.toFixed(3) + " %";
+        document.getElementById('outputPowder').innerText = X.toFixed(4);
+        document.getElementById('outputWater').innerText = W.toFixed(4);
+        document.getElementById('resultArea').style.display = 'block';
+        
+        setTimeout(() => {
+            document.getElementById('resultArea').scrollIntoView({ behavior: 'smooth' });
+        }, 100);
     }
 
-    // 核心計算邏輯
-    function calculate() {
-        // 讀取各欄位輸入數值 (若空白則視為 0)
-        const inputs = {
-            "N58-30K": parseFloat(document.getElementById('w_n58').value) || 0,
-            "Super P": parseFloat(document.getElementById('w_sp').value) || 0,
-            "BD_C23":  parseFloat(document.getElementById('w_bd').value) || 0,
-            "SWCNT":   parseFloat(document.getElementById('w_swcnt').value) || 0,
-            "RO水":    parseFloat(document.getElementById('w_ro').value) || 0,
-            "SBR":     parseFloat(document.getElementById('w_sbr').value) || 0
-        };
-
-        let currentTotalWeight = 0;
-        let currentTotalSolidWeight = 0;
-
-        // 計算目前投入的總重與總固重
-        Object.keys(inputs).forEach(name => {
-            const weight = inputs[name];
-            const solidRate = db[name] / 100;
-            currentTotalWeight += weight;
-            currentTotalSolidWeight += weight * solidRate;
-        });
-
-        // 計算目前百分比
-        const currentSolidP = currentTotalWeight > 0 ? (currentTotalSolidWeight / currentTotalWeight) * 100 : 0;
-        const currentWaterP = 100 - currentSolidP;
-
-        // 讀取反推目標值
-        const targetTotalW = parseFloat(document.getElementById('targetTotalWeight').value) || 0;
-        const targetSolidP = parseFloat(document.getElementById('targetPercent').value) / 100 || 0;
-        const adjustMatName = document.getElementById('adjustMaterial').value;
-        const adjustSolidRate = db[adjustMatName] / 100;
-
-        // 計算要達到「目標總重量」，還差多少重量
-        let neededWeight = targetTotalW - currentTotalWeight;
-        
-        // 計算以此調節原料補足到目標總重後，最終的固含量預測值
-        let finalPercent = 0;
-        if (targetTotalW > 0) {
-            const finalSolidWeight = currentTotalSolidWeight + (Math.max(0, neededWeight) * adjustSolidRate);
-            finalPercent = (finalSolidWeight / targetTotalW) * 100;
-        }
-
-        // 輸出基本摘要資訊 (保留四位小數，百分比保留兩位)
-        document.getElementById('resTotalWeight').innerText = currentTotalWeight.toFixed(4) + " kg";
-        document.getElementById('resTotalSolid').innerText = currentTotalSolidWeight.toFixed(4) + " kg";
-        document.getElementById('resWaterPercent').innerText = currentWaterP.toFixed(2) + " %";
-        document.getElementById('resSolidPercent').innerText = currentSolidP.toFixed(2) + " %";
-        document.getElementById('resAdjustName').innerText = adjustMatName;
-
-        // 輸出反推結果與防呆機制
-        const weightResEl = document.getElementById('resNeededWeight');
-        if (neededWeight >= 0) {
-            weightResEl.innerText = neededWeight.toFixed(4) + " kg";
-            document.getElementById('resFinalSolidPercent').innerText = finalPercent.toFixed(2) + " %";
-        } else {
-            weightResEl.innerText = "0.0000 kg";
-            document.getElementById('resFinalSolidPercent').innerText = "無法計算 (目前總重已超過目標值)";
-        }
-
-        // 展開結果區塊
-        document.getElementById('resultBox').style.display = 'block';
+    function resetForm() {
+        document.getElementById('sc1').value = '';
+        document.getElementById('sc2').value = '';
+        document.getElementById('sc3').value = '';
+        document.getElementById('totalWeight').value = '10';
+        document.getElementById('avgInfo').innerText = '平均固含量：-- %';
+        document.getElementById('resultArea').style.display = 'none';
     }
 </script>
+
 </body>
 </html>
